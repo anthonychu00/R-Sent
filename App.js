@@ -115,7 +115,7 @@ class App extends React.Component{
                 score:document.getElementById('score').textContent,
                 results:figure.data
             })
-        //this.forceUpdate();
+       
     }
 
 }
