@@ -108,7 +108,7 @@ class App extends React.Component{
 
     checkIt(){
         console.log("Hmmmmmmm");
-        //if statements later?
+        
         //var fig2=Object.assign({},figure.data)
         this.setState({
                 commentNumber:document.getElementById('num').textContent,
