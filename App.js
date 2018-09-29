@@ -3,6 +3,8 @@ import {reddit} from './functionalitySnoo';//reddit is a snoowrap
 import {client} from './stream';
 import './styles.css';
 import Plot from 'react-plotly.js';
+import {BarChart} from 'react-easy-chart';
+import {Legend} from 'react-easy-chart';
 //import {Switch,Route} from 'react-router-dom';
 var Sentiment =require('sentiment');
 var sentiment = new Sentiment();
@@ -10,12 +12,13 @@ var interval=0;
 
 var figure = {//where data for the plot will be stored
     data: [{
-        x:[-50,-40,-30,-20,-10,0,10,20,30,40,50],
-        y:[0,0,0,0,0,0,0,0,0,0,0],
+        x:[-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10],
+        y:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         type:'bar'
     }],
     layout:{
-        title:"Plotly test"
+        title:"Sentiments",
+        //datarevision:0
     }
 };//*****************************************need to do some more html trickery */
 
@@ -30,8 +33,9 @@ class App extends React.Component{
             text:"",
             commentNumber:"0",
             score:"0",
-            results:figure.data//plotly uses shallow comparison which only checks by reference/ can probably optimize later tp ut data itself here
-        }//look at ***layout.datarevision***, change how code is used
+            results:figure.data,//plotly uses shallow comparison which only checks by reference/ can probably optimize later tp ut data itself here
+            newLayout:figure.layout
+        }
     }
 
     render(){
@@ -41,7 +45,10 @@ class App extends React.Component{
        onChange={this.handleTextChange}/>
        <InfoBox onChange={this.handleNewComment}
        number={this.state.commentNumber}/>
-       <Plot data={figure.data} layout={figure.layout}/>
+       /*<Plot data={this.state.results} layout={this.state.newLayout}
+       		onInitialized={ (mind) =>this.setState(mind) }
+       		onUpdate={ (mind) =>  this.setState(mind) }/>*/
+       <BarChart data={this.state.results} height={250} width={350}/>
        </div>
     );
     }
@@ -77,14 +84,15 @@ class App extends React.Component{
                 document.getElementById('score').innerHTML=Math.round(((words.score+Number(document.getElementById('score').textContent))/document.getElementById('num').textContent)*100)/100;//rounding to more easily see change
 
                 //updates bar graph
-                var value=Math.round(words.score / 10) * 10;//start here next day
+                //var value=Math.round(words.score / 10) * 10;//start here next day
+                var value=Math.round(words.score)
                 console.log(words.score);
                 console.log(value);//have value in another html thing?
-                if(value>50)
-                    value=50;
-                else if(value<-50)
-                    value=-50;
-                figure.data[0].y[figure.data[0].x.indexOf(value)]+=1;//debug this tmrw?
+                if(value>10)
+                    value=10;
+                else if(value<-10)
+                    value=-10;
+                figure.data[0].y[figure.data[0].x.indexOf(value)]+=1;
                 console.log(figure.data[0].y);
                 
 
@@ -97,7 +105,7 @@ class App extends React.Component{
         }, 100000);  
         
         //interval=setInterval(checkIt,1000)
-        interval=setInterval(this.checkIt,1000);
+        interval=setInterval(this.checkIt,500);
     }
 
     handleTextChange(e){//updates the state of text as the user types in letters
@@ -107,15 +115,16 @@ class App extends React.Component{
     }
 
     checkIt(){
-        console.log("Hmmmmmmm");
-        
-        //var fig2=Object.assign({},figure.data)
+        //console.log("Hmmmmmmm");
+    	const brandLayout = Object.assign({}, this.state.newLayout);
+    	brandLayout.datarevision=Number(this.state.commentNumber);//***********
         this.setState({
                 commentNumber:document.getElementById('num').textContent,
                 score:document.getElementById('score').textContent,
-                results:figure.data
+                results:figure.data,
+                newLayout:brandLayout
             })
-       
+        
     }
 
 }
