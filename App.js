@@ -18,7 +18,7 @@ var figure = {//where data for the plot will be stored
     }],
     layout:{
         title:"Sentiments",
-        //datarevision:0
+        
     }
 };//*****************************************need to do some more html trickery */
 
