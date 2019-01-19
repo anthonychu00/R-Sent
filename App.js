@@ -20,7 +20,7 @@ var figure = {//where data for the plot will be stored
         title:"Sentiments",
         
     }
-};//*****************************************need to do some more html trickery */
+};//*****************************************
 
 class App extends React.Component{
     constructor(props){
